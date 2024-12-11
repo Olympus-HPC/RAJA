@@ -19,3 +19,6 @@
 [submodule "tpl/desul"]
 	path = tpl/desul
 	url = https://github.com/desul/desul.git
+[submodule "tpl/proteus"]
+	path = tpl/proteus
+	url = git@github.com:Olympus-HPC/proteus.git
