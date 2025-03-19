@@ -430,6 +430,7 @@ template<typename EXEC_POL,
                               (IterationGetter::block_size > 0),
                           size_t> BlockSize = IterationGetter::block_size>
 __launch_bounds__(BlockSize, 1) __global__
+__attribute__((annotate("jit", 3)))
     void forallp_hip_kernel(LOOP_BODY loop_body,
                             const Iterator idx,
                             IndexType length,
@@ -458,6 +459,7 @@ template<typename EXEC_POL,
                                           IterationMapping>::value &&
                               (IterationGetter::block_size <= 0),
                           size_t> RAJA_UNUSED_ARG(BlockSize) = 0>
+__attribute__((annotate("jit", 3)))
 __global__ void forallp_hip_kernel(LOOP_BODY loop_body,
                                    const Iterator idx,
                                    IndexType length,
@@ -488,6 +490,7 @@ template<
                          (IterationGetter::block_size > 0),
                      size_t> BlockSize = IterationGetter::block_size>
 __launch_bounds__(BlockSize, 1) __global__
+__attribute__((annotate("jit", 3)))
     void forall_hip_kernel(LOOP_BODY loop_body,
                            const Iterator idx,
                            IndexType length)
@@ -516,7 +519,9 @@ template<
                                          IterationMapping>::value &&
                          (IterationGetter::block_size <= 0),
                      size_t> RAJA_UNUSED_ARG(BlockSize) = 0>
-__global__ void forall_hip_kernel(LOOP_BODY loop_body,
+__global__ 
+__attribute__((annotate("jit", 3)))
+void forall_hip_kernel(LOOP_BODY loop_body,
                                   const Iterator idx,
                                   IndexType length)
 {
@@ -546,6 +551,7 @@ template<
                          (IterationGetter::block_size > 0),
                      size_t> BlockSize = IterationGetter::block_size>
 __launch_bounds__(BlockSize, 1) __global__
+__attribute__((annotate("jit", 3)))
     void forallp_hip_kernel(LOOP_BODY loop_body,
                             const Iterator idx,
                             IndexType length,
@@ -577,7 +583,9 @@ template<
                                          IterationMapping>::value &&
                          (IterationGetter::block_size <= 0),
                      size_t> RAJA_UNUSED_ARG(BlockSize) = 0>
-__global__ void forallp_hip_kernel(LOOP_BODY loop_body,
+__global__ 
+__attribute__((annotate("jit", 3)))
+void forallp_hip_kernel(LOOP_BODY loop_body,
                                    const Iterator idx,
                                    IndexType length,
                                    ForallParam f_params)
@@ -614,6 +622,7 @@ RAJA_INLINE concepts::enable_if_t<
     resources::EventProxy<resources::Hip>,
     RAJA::expt::type_traits::is_ForallParamPack<ForallParam>,
     RAJA::expt::type_traits::is_ForallParamPack_empty<ForallParam>>
+__attribute__((annotate("jit", 3)))
 forall_impl(resources::Hip hip_res,
             ::RAJA::policy::hip::hip_exec<IterationMapping,
                                           IterationGetter,
@@ -695,6 +704,7 @@ RAJA_INLINE concepts::enable_if_t<
     RAJA::expt::type_traits::is_ForallParamPack<ForallParam>,
     concepts::negate<
         RAJA::expt::type_traits::is_ForallParamPack_empty<ForallParam>>>
+__attribute__((annotate("jit", 3)))
 forall_impl(resources::Hip hip_res,
             ::RAJA::policy::hip::hip_exec<IterationMapping,
                                           IterationGetter,
