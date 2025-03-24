@@ -29,7 +29,7 @@ namespace RAJA
 {
 
 template <typename BODY>
-__global__ void launch_global_fcn(BODY body_in)
+__global__ __attribute__((annotate("jit"))) void launch_global_fcn(BODY body_in)
 {
   LaunchContext ctx;
 
@@ -45,7 +45,8 @@ __global__ void launch_global_fcn(BODY body_in)
 }
 
 template <typename BODY, typename ReduceParams>
-__global__ void launch_new_reduce_global_fcn(BODY body_in, ReduceParams reduce_params)
+__global__ __attribute__((annotate("jit"))) void launch_new_reduce_global_fcn(BODY body_in,
+  ReduceParams reduce_params)
 {
   LaunchContext ctx;
 
