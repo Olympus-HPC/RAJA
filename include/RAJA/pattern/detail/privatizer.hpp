@@ -58,10 +58,10 @@ struct Privatizer {
                 "a bug");
 
   RAJA_SUPPRESS_HD_WARN
-  RAJA_HOST_DEVICE Privatizer(const T& o) : priv{o} {}
+  RAJA_HOST_DEVICE  Privatizer(const T& o) : priv{o} {}
 
   RAJA_SUPPRESS_HD_WARN
-  RAJA_HOST_DEVICE reference_type get_priv() { return priv; }
+  RAJA_HOST_DEVICE  reference_type get_priv() { return priv; }
 };
 
 /**
@@ -83,7 +83,7 @@ struct Privatizer {
  */
 template <typename T,
           typename std::enable_if<!has_privatizer<T>::value>::type* = nullptr>
-RAJA_HOST_DEVICE auto thread_privatize(const T& item) -> Privatizer<T>
+RAJA_HOST_DEVICE  auto thread_privatize(const T& item) -> Privatizer<T>
 {
   return Privatizer<T>{item};
 }
@@ -91,7 +91,7 @@ RAJA_HOST_DEVICE auto thread_privatize(const T& item) -> Privatizer<T>
 RAJA_SUPPRESS_HD_WARN
 template <typename T,
           typename std::enable_if<has_privatizer<T>::value>::type* = nullptr>
-RAJA_HOST_DEVICE auto thread_privatize(const T& item) -> typename T::privatizer
+RAJA_HOST_DEVICE  auto thread_privatize(const T& item) -> typename T::privatizer
 {
   return typename T::privatizer{item};
 }

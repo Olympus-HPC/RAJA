@@ -62,7 +62,7 @@ struct CudaStatementExecutor<
   using DimensionCalculator = RAJA::internal::KernelDimensionCalculator<
       RAJA::policy::cuda::cuda_indexer<iteration_mapping::Direct, sync, IndexMapper>>;
 
-  static inline RAJA_DEVICE
+  static __forceinline__ RAJA_DEVICE
   void exec(Data &data, bool thread_active)
   {
     const diff_t len = segment_length<ArgumentId>(data);
@@ -79,7 +79,7 @@ struct CudaStatementExecutor<
     enclosed_stmts_t::exec(data, thread_active && have_work);
   }
 
-  static inline
+  static __forceinline__
   LaunchDims calculateDimensions(Data const &data)
   {
     const diff_t len = segment_length<ArgumentId>(data);
@@ -126,7 +126,7 @@ struct CudaStatementExecutor<
       RAJA::policy::cuda::cuda_indexer<iteration_mapping::StridedLoop<named_usage::unspecified>, kernel_sync_requirement::sync, IndexMapper>>;
 
 
-  static inline RAJA_DEVICE
+  static __forceinline__ RAJA_DEVICE
   void exec(Data &data, bool thread_active)
   {
     // grid stride loop
@@ -151,7 +151,7 @@ struct CudaStatementExecutor<
     }
   }
 
-  static inline
+  static __forceinline__
   LaunchDims calculateDimensions(Data const &data)
   {
     diff_t len = segment_length<ArgumentId>(data);
@@ -198,7 +198,7 @@ struct CudaStatementExecutor<
       RAJA::policy::cuda::cuda_indexer<iteration_mapping::StridedLoop<named_usage::unspecified>, kernel_sync_requirement::none, IndexMapper>>;
 
 
-  static inline RAJA_DEVICE
+  static __forceinline__ RAJA_DEVICE
   void exec(Data &data, bool thread_active)
   {
     // grid stride loop
@@ -218,7 +218,7 @@ struct CudaStatementExecutor<
     }
   }
 
-  static inline
+  static __forceinline__
   LaunchDims calculateDimensions(Data const &data)
   {
     const diff_t len = segment_length<ArgumentId>(data);
@@ -287,7 +287,7 @@ struct CudaStatementExecutor<
                 "BitMask is too large for CUDA warp size");
 
   static
-  inline
+  __forceinline__
   RAJA_DEVICE
   void exec(Data &data, bool thread_active)
   {
@@ -304,7 +304,7 @@ struct CudaStatementExecutor<
 
 
   static
-  inline
+  __forceinline__
   LaunchDims calculateDimensions(Data const &data)
   {
     // Get enclosed statements
@@ -356,7 +356,7 @@ struct CudaStatementExecutor<
                 "BitMask is too large for CUDA warp size");
 
   static
-  inline
+  __forceinline__
   RAJA_DEVICE
   void exec(Data &data, bool thread_active)
   {
@@ -383,7 +383,7 @@ struct CudaStatementExecutor<
 
 
   static
-  inline
+  __forceinline__
   LaunchDims calculateDimensions(Data const &data)
   {
     // Get enclosed statements
@@ -432,7 +432,7 @@ struct CudaStatementExecutor<
   using diff_t = segment_diff_type<ArgumentId, Data>;
 
   static
-  inline
+  __forceinline__
   RAJA_DEVICE
   void exec(Data &data, bool thread_active)
   {
@@ -449,7 +449,7 @@ struct CudaStatementExecutor<
 
 
   static
-  inline
+  __forceinline__
   LaunchDims calculateDimensions(Data const &data)
   {
     // Get enclosed statements
@@ -500,7 +500,7 @@ struct CudaStatementExecutor<
 
 
   static
-  inline
+  __forceinline__
   RAJA_DEVICE
   void exec(Data &data, bool thread_active)
   {
@@ -527,7 +527,7 @@ struct CudaStatementExecutor<
 
 
   static
-  inline
+  __forceinline__
   LaunchDims calculateDimensions(Data const &data)
   {
     // Get enclosed statements

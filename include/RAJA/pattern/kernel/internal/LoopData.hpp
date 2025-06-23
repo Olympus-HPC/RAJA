@@ -31,6 +31,10 @@
 #include "RAJA/pattern/kernel/internal/StatementList.hpp"
 #include "RAJA/pattern/kernel/internal/Template.hpp"
 
+#if defined (ENABLE_JIT)
+#include "proteus/JitInterface.hpp"
+#endif
+
 #include <iterator>
 #include <type_traits>
 
@@ -142,6 +146,9 @@ struct LoopData {
   LoopData(SegmentTuple const &s, ParamTuple const &p, Resource r, Bodies const &... b)
       : segment_tuple(s), param_tuple(p), res(r), bodies(b...)
   {
+#if defined (ENABLE_JIT)
+(proteus::register_lambda(b), ...);
+#endif
   }
   constexpr LoopData(LoopData const &) = default;
   constexpr LoopData(LoopData &&) = default;

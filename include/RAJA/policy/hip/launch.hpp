@@ -24,12 +24,16 @@
 #include "RAJA/policy/hip/MemUtils_HIP.hpp"
 #include "RAJA/policy/hip/raja_hiperrchk.hpp"
 #include "RAJA/util/resource.hpp"
+#if defined (ENABLE_JIT)
+#include "proteus/JitInterface.hpp"
+#endif
 
 namespace RAJA
 {
 
 template <typename BODY>
-__global__ void launch_global_fcn(BODY body_in)
+__global__ __attribute__((annotate("jit")) ) 
+void launch_global_fcn(BODY body_in)
 {
   LaunchContext ctx;
 
@@ -45,7 +49,8 @@ __global__ void launch_global_fcn(BODY body_in)
 }
 
 template <typename BODY, typename ReduceParams>
-__global__ void launch_new_reduce_global_fcn(BODY body_in, ReduceParams reduce_params)
+__global__ __attribute__((annotate("jit")) ) 
+void launch_new_reduce_global_fcn(BODY body_in, ReduceParams reduce_params)
 {
   LaunchContext ctx;
 
@@ -74,6 +79,10 @@ struct LaunchExecute<RAJA::policy::hip::hip_launch_t<async, named_usage::unspeci
        const char *kernel_name, BODY_IN &&body_in, ReduceParams &RAJA_UNUSED_ARG(launch_reducers))
   {
     using BODY = camp::decay<BODY_IN>;
+
+#if defined (ENABLE_JIT)
+    proteus::register_lambda(body_in);
+#endif
 
     auto func = reinterpret_cast<const void*>(
         &launch_global_fcn<BODY>);
@@ -131,6 +140,10 @@ struct LaunchExecute<RAJA::policy::hip::hip_launch_t<async, named_usage::unspeci
        const char *kernel_name, BODY_IN &&body_in, ReduceParams &launch_reducers)
   {
     using BODY = camp::decay<BODY_IN>;
+
+#if defined (ENABLE_JIT)
+    proteus::register_lambda(body_in);
+#endif
 
     auto func = reinterpret_cast<const void*>(
         &launch_new_reduce_global_fcn<BODY, camp::decay<ReduceParams>>);
@@ -192,7 +205,8 @@ struct LaunchExecute<RAJA::policy::hip::hip_launch_t<async, named_usage::unspeci
 
 
 template <typename BODY, int num_threads>
-__launch_bounds__(num_threads, 1) __global__
+__launch_bounds__(num_threads, 1) __global__ 
+__attribute__((annotate("jit")) )
 void launch_global_fcn_fixed(BODY body_in)
 {
   LaunchContext ctx;
@@ -209,7 +223,8 @@ void launch_global_fcn_fixed(BODY body_in)
 }
 
 template <typename BODY, int num_threads, typename ReduceParams>
-__launch_bounds__(num_threads, 1) __global__
+__launch_bounds__(num_threads, 1) __global__ 
+__attribute__((annotate("jit")) )
 void launch_new_reduce_global_fcn_fixed(BODY body_in, ReduceParams reduce_params)
 {
   LaunchContext ctx;
@@ -240,6 +255,10 @@ struct LaunchExecute<RAJA::policy::hip::hip_launch_t<async, nthreads>> {
        const char *kernel_name, BODY_IN &&body_in, ReduceParams &RAJA_UNUSED_ARG(launch_reducers))
   {
     using BODY = camp::decay<BODY_IN>;
+
+#if defined (ENABLE_JIT)
+    proteus::register_lambda(body_in);
+#endif
 
     auto func = reinterpret_cast<const void*>(
         &launch_global_fcn_fixed<BODY, nthreads>);
@@ -295,6 +314,10 @@ struct LaunchExecute<RAJA::policy::hip::hip_launch_t<async, nthreads>> {
        const char *kernel_name, BODY_IN &&body_in, ReduceParams &launch_reducers)
   {
     using BODY = camp::decay<BODY_IN>;
+
+#if defined (ENABLE_JIT)
+    proteus::register_lambda(body_in);
+#endif
 
     auto func = reinterpret_cast<const void*>(
         &launch_new_reduce_global_fcn_fixed<BODY, nthreads, camp::decay<ReduceParams>>);

@@ -83,6 +83,10 @@
 
 #include "RAJA/util/resource.hpp"
 
+#if defined (ENABLE_JIT)
+#include "proteus/JitInterface.hpp"
+#endif
+
 namespace RAJA
 {
 
@@ -749,5 +753,11 @@ namespace expt
 
 }  // namespace RAJA
 
+#if not defined ENABLE_JIT
+namespace proteus {
+  template<typename T>
+  static constexpr auto jit_variable(T arg) { return arg; }
+}
+#endif
 
 #endif  // closing endif for header file include guard

@@ -126,7 +126,7 @@ struct CudaStatementListExecutorHelper {
   using cur_stmt_t = camp::at_v<StmtList, cur_stmt>;
 
   template <typename Data>
-  inline static RAJA_DEVICE void exec(Data &data, bool thread_active)
+  __forceinline__ static RAJA_DEVICE void exec(Data &data, bool thread_active)
   {
     // Execute stmt
     cur_stmt_t::exec(data, thread_active);
@@ -137,7 +137,7 @@ struct CudaStatementListExecutorHelper {
 
 
   template <typename Data>
-  inline static LaunchDims calculateDimensions(Data &data)
+  __forceinline__ static LaunchDims calculateDimensions(Data &data)
   {
     // Compute this statements launch dimensions
     LaunchDims statement_dims = cur_stmt_t::calculateDimensions(data);
@@ -154,13 +154,13 @@ template <camp::idx_t num_stmts, typename StmtList>
 struct CudaStatementListExecutorHelper<num_stmts, num_stmts, StmtList> {
 
   template <typename Data>
-  inline static RAJA_DEVICE void exec(Data &, bool)
+  __forceinline__ static RAJA_DEVICE void exec(Data &, bool)
   {
     // nop terminator
   }
 
   template <typename Data>
-  inline static LaunchDims calculateDimensions(Data &)
+  __forceinline__ static LaunchDims calculateDimensions(Data &)
   {
     return LaunchDims();
   }

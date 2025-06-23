@@ -374,8 +374,8 @@ template <typename EXEC_POL,
                 std::is_base_of<iteration_mapping::DirectBase, IterationMapping>::value &&
                 (IterationGetter::block_size <= 0),
               size_t > RAJA_UNUSED_ARG(BlockSize) = 0>
-__attribute__((annotate("jit", 3)))
 __global__
+__attribute__((annotate("jit", 3)))
 void forallp_hip_kernel(LOOP_BODY loop_body,
                         const Iterator idx,
                         IndexType length,
@@ -531,6 +531,9 @@ forall_impl(resources::Hip hip_res,
             LoopBody&& loop_body,
             ForallParam)
 {
+#if defined (ENABLE_JIT)
+  proteus::register_lambda(loop_body);
+#endif
   using Iterator  = camp::decay<decltype(std::begin(iter))>;
   using LOOP_BODY = camp::decay<LoopBody>;
   using IndexType = camp::decay<decltype(std::distance(std::begin(iter), std::end(iter)))>;
@@ -599,6 +602,9 @@ forall_impl(resources::Hip hip_res,
             LoopBody&& loop_body,
             ForallParam f_params)
 {
+#if defined (ENABLE_JIT)
+  proteus::register_lambda(loop_body);
+#endif
   using Iterator  = camp::decay<decltype(std::begin(iter))>;
   using LOOP_BODY = camp::decay<LoopBody>;
   using IndexType = camp::decay<decltype(std::distance(std::begin(iter), std::end(iter)))>;
@@ -691,6 +697,9 @@ forall_impl(resources::Hip r,
             const TypedIndexSet<SegmentTypes...>& iset,
             LoopBody&& loop_body)
 {
+#if defined (ENABLE_JIT)
+  proteus::register_lambda(loop_body);
+#endif
   int num_seg = iset.getNumSegments();
   for (int isi = 0; isi < num_seg; ++isi) {
     iset.segmentCall(r,
